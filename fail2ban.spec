@@ -1,6 +1,6 @@
 Summary:	Ban IPs that make too many password failures
 Name:		fail2ban
-Version:	0.7.7
+Version:	0.8.0
 Release:	%mkrel 1
 License:	GPL
 Group:		System/Configuration/Networking
