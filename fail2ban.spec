@@ -7,6 +7,7 @@ Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
 Source0:	http://dl.sourceforge.net/fail2ban/%{name}-%{version}.tar.bz2
 Source1:	%{name}-initscript
+Patch0:		%{name}-0.8.0-ssh-vulnerability.patch
 Requires(pre):	rpm-helper
 BuildRequires:	python-devel
 Requires:	python		>= 2.5
@@ -23,8 +24,8 @@ address. These rules can be defined by the user. Fail2Ban can read
 multiple log files including sshd or Apache web server logs.
 
 %prep
-
 %setup -q
+%patch0 -p1
 
 %build
 env CFLAGS="%{optflags}" python setup.py build 
@@ -52,13 +53,13 @@ install -D %{SOURCE1} %{buildroot}/%{_initrddir}/%{name}
 %_preun_service fail2ban
 
 %files
-%defattr(644,root,root,755)
+%defattr(-,root,root)
 %doc CHANGELOG README TODO
 %attr(744,root,root) %{_initrddir}/%{name}
-%attr(755,root,root) %{_bindir}/%{name}-*
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/action.d/*.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/filter.d/*.conf
+%{_bindir}/%{name}-*
+%config(noreplace) %{_sysconfdir}/%{name}/*.conf
+%config(noreplace) %{_sysconfdir}/%{name}/action.d/*.conf
+%config(noreplace) %{_sysconfdir}/%{name}/filter.d/*.conf
 %dir %{_sysconfdir}/%{name}
 %dir %{_sysconfdir}/%{name}/action.d
 %dir %{_sysconfdir}/%{name}/filter.d
@@ -71,5 +72,3 @@ install -D %{SOURCE1} %{buildroot}/%{_initrddir}/%{name}
 %{_datadir}/%{name}/common/*.py*
 %{_datadir}/%{name}/*-info
 %{_mandir}/man1/*
-
-
