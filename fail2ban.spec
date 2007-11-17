@@ -1,13 +1,12 @@
 Summary:	Ban IPs that make too many password failures
 Name:		fail2ban
-Version:	0.8.0
+Version:	0.8.1
 Release:	%mkrel 1
-License:	GPL
+License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
 Source0:	http://dl.sourceforge.net/fail2ban/%{name}-%{version}.tar.bz2
 Source1:	%{name}-initscript
-Patch0:		%{name}-0.8.0-ssh-vulnerability.patch
 Requires(pre):	rpm-helper
 BuildRequires:	python-devel
 Requires:	python		>= 2.5
@@ -25,7 +24,6 @@ multiple log files including sshd or Apache web server logs.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 env CFLAGS="%{optflags}" python setup.py build 
