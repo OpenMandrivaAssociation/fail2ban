@@ -14,7 +14,6 @@ Requires:	tcp_wrappers	>= 7.6-29
 Requires:	iptables	>= 1.3.5-3
 %py_requires -d
 BuildArch:	noarch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 Fail2Ban scans log files like /var/log/secure and bans IP that makes
