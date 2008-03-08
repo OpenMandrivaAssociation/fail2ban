@@ -26,6 +26,7 @@ multiple log files including sshd or Apache web server logs.
 %setup -q
 
 %build
+%serverbuild
 env CFLAGS="%{optflags}" python setup.py build 
 
 pushd man
@@ -52,7 +53,7 @@ install -D %{SOURCE1} %{buildroot}/%{_initrddir}/%{name}
 
 %files
 %defattr(-,root,root)
-%doc CHANGELOG README TODO
+%doc ChangeLog README TODO
 %attr(744,root,root) %{_initrddir}/%{name}
 %{_bindir}/%{name}-*
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
