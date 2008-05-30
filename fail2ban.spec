@@ -1,12 +1,13 @@
 Summary:	Ban IPs that make too many password failures
 Name:		fail2ban
 Version:	0.8.2
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
 Source0:	http://dl.sourceforge.net/fail2ban/%{name}-%{version}.tar.bz2
 Source1:	%{name}-initscript
+Patch0:		%{name}-0.8.2-jail-conf.patch
 Requires(pre):	rpm-helper
 BuildRequires:	python-devel
 Requires:	python		>= 2.5
@@ -24,6 +25,7 @@ multiple log files including sshd or Apache web server logs.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %serverbuild
@@ -41,6 +43,7 @@ python setup.py install --root=%{buildroot}
 install -d %{buildroot}/%{_mandir}/man1
 install man/*.1 %{buildroot}%{_mandir}/man1/
 install -D %{SOURCE1} %{buildroot}/%{_initrddir}/%{name}
+install -d %{buildroot}/%{_var}/run/%{name}
 
 %clean
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
@@ -66,6 +69,7 @@ install -D %{SOURCE1} %{buildroot}/%{_initrddir}/%{name}
 %dir %{_datadir}/%{name}/client
 %dir %{_datadir}/%{name}/server
 %dir %{_datadir}/%{name}/common
+%dir %{_var}/run/%{name}
 %{_datadir}/%{name}/client/*.py*
 %{_datadir}/%{name}/server/*.py*
 %{_datadir}/%{name}/common/*.py*
