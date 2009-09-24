@@ -1,7 +1,7 @@
 Summary:	Ban IPs that make too many password failures
 Name:		fail2ban
 Version:	0.8.4
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
@@ -14,6 +14,7 @@ BuildRequires:	python-devel
 Requires:	python		>= 2.5
 Requires:	tcp_wrappers	>= 7.6-29
 Requires:	iptables	>= 1.3.5-3
+Suggests:	python-gamin
 %py_requires -d
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
