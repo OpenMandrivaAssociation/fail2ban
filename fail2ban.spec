@@ -10,6 +10,7 @@ Source1:	%{name}.service
 Patch0:		%{name}-0.8.2-jail-conf.patch
 Patch2:		fail2ban_0.8.6-fix-init-script.patch
 Patch3:		fail2ban_0.8.6-log-actions-to-SYSLOG.patch
+Patch4:		fail2ban-0.8.6-fix-dict.patch
 Requires(pre):	rpm-helper
 BuildRequires:	python-devel
 Requires:	python		>= 2.5
@@ -36,6 +37,7 @@ multiple log files including sshd or Apache web server logs.
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %serverbuild_hardened
