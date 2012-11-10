@@ -1,0 +1,20 @@
+diff -Naur fail2ban-fail2ban-a20d1f8/files/redhat-initd fail2ban-fail2ban-a20d1f8.tpg/files/redhat-initd
+--- fail2ban-fail2ban-a20d1f8/files/redhat-initd	2011-11-29 03:46:04.000000000 +0000
++++ fail2ban-fail2ban-a20d1f8.tpg/files/redhat-initd	2012-01-15 18:36:22.000000000 +0000
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ #
+-# chkconfig: 345 92 08
++# chkconfig: - 92 08
+ # description: Fail2ban daemon
+ #              http://fail2ban.sourceforge.net/wiki/index.php/Main_Page
+ # process name: fail2ban-server
+@@ -28,7 +28,7 @@
+     getpid
+     if [ -z "$pid" ]; then
+ 	rm -rf /var/run/fail2ban/fail2ban.sock # in case of unclean shutdown
+-        $FAIL2BAN start > /dev/null
++        $FAIL2BAN -x start > /dev/null
+         RETVAL=$?
+     fi
+     if [ $RETVAL -eq 0 ]; then
