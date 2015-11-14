@@ -1,13 +1,12 @@
 Summary:	Ban IPs that make too many password failures
 
 Name:		fail2ban
-Version:	0.8.6
+Version:	0.9.3
 Release:	3
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
-Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}_%{version}.orig.tar.gz
-Source1:	%{name}.service
+Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}-%{version}.tar.gz
 Patch0:		%{name}-0.8.2-jail-conf.patch
 Patch2:		fail2ban_0.8.6-fix-init-script.patch
 Patch3:		fail2ban_0.8.6-log-actions-to-SYSLOG.patch
@@ -20,8 +19,8 @@ Requires:	iptables	>= 1.3.5-3
 Suggests:	python-gamin
 BuildRequires:  python-devel
 BuildArch:	noarch
-BuildRequires:	systemd-units
-Requires(post,preun): systemd-units
+BuildRequires:	systemd
+Requires(post,preun): systemd
 
 
 %description
@@ -32,34 +31,27 @@ multiple log files including sshd or Apache web server logs.
 
 %prep
 %setup -qn fail2ban-fail2ban-a20d1f8
-%patch0 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+#patch0 -p1
+#patch2 -p1
+#patch3 -p1
+#patch4 -p1
 
 %build
 %serverbuild_hardened
-env CFLAGS="%{optflags}" python setup.py build
+env CFLAGS="%{optflags}" %{__python} setup.py build
 
 pushd man
 sh generate-man
 popd
 
 %install
-python setup.py install --root=%{buildroot}
+%{__python} setup.py install --root=%{buildroot}
 
 install -d %{buildroot}/%{_mandir}/man1
 install man/*.1 %{buildroot}%{_mandir}/man1/
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 
 install -d %{buildroot}/%{_var}/run/%{name}
-
-%post
-%_post_service fail2ban
-
-%preun
-%_preun_service fail2ban
 
 %files
 %doc ChangeLog README TODO
@@ -81,5 +73,4 @@ install -d %{buildroot}/%{_var}/run/%{name}
 %{_datadir}/%{name}/common/*.py*
 %{_datadir}/%{name}/*-info
 %{_mandir}/man1/*
-
 
