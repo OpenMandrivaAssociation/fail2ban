@@ -38,6 +38,7 @@ multiple log files including sshd or Apache web server logs.
 env CFLAGS="%{optflags}" %{__python} setup.py build
 
 pushd man
+pwd
 sh generate-man
 popd
 
