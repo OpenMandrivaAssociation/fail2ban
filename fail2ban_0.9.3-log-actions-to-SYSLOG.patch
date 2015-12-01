@@ -1,0 +1,11 @@
+--- fail2ban-0.9.3/config/fail2ban.conf.orig	2015-12-01 00:34:39.541681478 +0000
++++ fail2ban-0.9.3/config/fail2ban.conf	2015-12-01 00:41:39.389712284 +0000
+@@ -32,7 +32,7 @@
+ #         (e.g. /etc/logrotate.d/fail2ban on Debian systems)
+ # Values: [ STDOUT | STDERR | SYSLOG | FILE ]  Default: STDERR
+ #
+-logtarget = /var/log/fail2ban.log
++logtarget = SYSLOG
+ 
+ # Option: syslogsocket
+ # Notes: Set the syslog socket file. Only used when logtarget is SYSLOG

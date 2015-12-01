@@ -7,10 +7,8 @@ License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
 Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}-%{version}.tar.gz
-Patch0:		%{name}-0.8.2-jail-conf.patch
-Patch2:		fail2ban_0.8.6-fix-init-script.patch
-Patch3:		fail2ban_0.8.6-log-actions-to-SYSLOG.patch
-Patch4:		fail2ban-0.8.6-fix-dict.patch
+Patch0:		%{name}-0.9.3-jail-conf.patch
+Patch1:		fail2ban_0.9.3-log-actions-to-SYSLOG.patch
 Requires(pre):	rpm-helper
 BuildRequires:	python-devel
 Requires:	python		>= 2.5
@@ -30,11 +28,9 @@ address. These rules can be defined by the user. Fail2Ban can read
 multiple log files including sshd or Apache web server logs.
 
 %prep
-%setup -qn fail2ban-fail2ban-a20d1f8
-#patch0 -p1
-#patch2 -p1
-#patch3 -p1
-#patch4 -p1
+%setup -qn fail2ban-0.9.3
+patch0 -p1
+patch1 -p1
 
 %build
 %serverbuild_hardened
