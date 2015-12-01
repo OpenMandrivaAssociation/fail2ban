@@ -18,6 +18,7 @@ Suggests:	python-gamin
 BuildRequires:  python-devel
 BuildArch:	noarch
 BuildRequires:	systemd
+BuildRequires:	help2man
 Requires(post,preun): systemd
 
 
