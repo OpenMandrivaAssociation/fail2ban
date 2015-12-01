@@ -28,9 +28,9 @@ address. These rules can be defined by the user. Fail2Ban can read
 multiple log files including sshd or Apache web server logs.
 
 %prep
-%setup -qn fail2ban-0.9.3
-patch0 -p1
-patch1 -p1
+%setup -n fail2ban-0.9.3
+%patch0 -p1
+%patch1 -p1
 
 %build
 %serverbuild_hardened
