@@ -80,5 +80,6 @@ rm -r %{buildroot}%{_docdir}/%{name}
 %{py3_sitedir}/%{name}/client/*.py*
 %{py3_sitedir}/%{name}/server/*.py*
 %{py3_sitedir}/%{name}/common/*.py*
+%{py_sitedir}/%{name}-%{version}-py3.1.egg-info/*
 %{_mandir}/man1/*
 
