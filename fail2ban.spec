@@ -70,6 +70,8 @@ rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/osx-*.conf
 
 # remove docs
 rm -r %{buildroot}%{_docdir}/%{name}
+# Remove test files
+rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 
 %post
 %_post_service fail2ban
@@ -88,8 +90,11 @@ rm -r %{buildroot}%{_docdir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/action.d/*.conf
 %config(noreplace) %{_sysconfdir}/%{name}/action.d/*.py
 %config(noreplace) %{_sysconfdir}/%{name}/filter.d/*.conf
-%config(noreplace) %{_sysconfdir}/%{name}/filter.d/ignorecommands/
-%{py_sitedir}/%{name}*
+%{_sysconfdir}/%{name}/filter.d/ignorecommands/
+%{py_sitedir}/%{name}/client/*.py
+%{py_sitedir}/%{name}/server/*.py
+%{py_sitedir}/%{name}-%{version}-py2.7.egg-info/*
+%{py_sitedir}/%{name}/*.py
 %ghost %dir %{_var}/run/%{name}
 %{_mandir}/man1/*
 
