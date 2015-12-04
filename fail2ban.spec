@@ -1,7 +1,7 @@
 Summary:	Ban IPs that make too many password failures
 Name:		fail2ban
 Version:	0.9.3
-Release:	%mkrel .1
+Release:	%mkrel 1
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
@@ -10,18 +10,15 @@ Source1:	%{name}.service
 Patch0:		%{name}-0.9.3-jail-conf.patch
 Patch1:		fail2ban_0.9.3-log-actions-to-SYSLOG.patch
 Requires(pre):	rpm-helper
-BuildRequires:	python-devel
+BuildRequires:	pkgconfig(python2)
+BuildRequires:	systemd
+BuildRequires:	help2man
 Requires:	python		>= 2.5
 Requires:	tcp_wrappers	>= 7.6-29
 Requires:	iptables	>= 1.3.5-3
 Suggests:	python-gamin
 %py_requires -d
 BuildArch:	noarch
-%if %mdkver >= 201100
-BuildRequires:	systemd-units
-Requires(post,preun): systemd-units
-%endif
-
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
@@ -31,7 +28,7 @@ address. These rules can be defined by the user. Fail2Ban can read
 multiple log files including sshd or Apache web server logs.
 
 %prep
-%setup -qn fail2ban-%{version}
+%setup -q
 %patch0 -p1
 %patch1 -p1
 
@@ -44,23 +41,35 @@ sh generate-man
 popd
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+#[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
 
-python setup.py install --root=%{buildroot}
+%{__python} setup.py install --root=%{buildroot}
+
+mkdir -p %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 
 install -d %{buildroot}/%{_mandir}/man1
 install man/*.1 %{buildroot}%{_mandir}/man1/
-%if %mdkver >= 201100
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
-%else
-install -D files/redhat-initd  %{buildroot}/%{_initrddir}/%{name}
-%endif
 
 install -d %{buildroot}/%{_var}/run/%{name}
+install -d %{buildroot}/%{_var}/lib/%{name}
 
-%clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_sysconfdir}/%{name}/jail.d
+
+cat > %{buildroot}%{_sysconfdir}/%{name}/jail.d/00-systemd.conf <<EOF
+# By defaul use python-systemd backend to access journald
+[DEFAULT]
+backend=systemd
+EOF
+
+# remove non-Linux actions
+rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/*ipfw.conf
+rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/{ipfilter,pf,ufw}.conf
+rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/osx-*.conf
+
+# remove docs
+rm -r %{buildroot}%{_docdir}/%{name}
 
 %post
 %_post_service fail2ban
@@ -70,30 +79,18 @@ install -d %{buildroot}/%{_var}/run/%{name}
 
 %files
 %defattr(-,root,root)
-%doc ChangeLog README TODO
-
-%if %mdkver >= 201100
+%doc ChangeLog README.md TODO
 %{_unitdir}/%{name}.service
-%else
-%attr(744,root,root) %{_initrddir}/%{name}
-%endif
-
 %{_bindir}/%{name}-*
+
+%config(noreplace) %{_sysconfdir}/%{name}/jail.d/00-systemd.conf
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/%{name}/action.d/*.conf
+%config(noreplace) %{_sysconfdir}/%{name}/action.d/*.py
 %config(noreplace) %{_sysconfdir}/%{name}/filter.d/*.conf
-%dir %{_sysconfdir}/%{name}
-%dir %{_sysconfdir}/%{name}/action.d
-%dir %{_sysconfdir}/%{name}/filter.d
-%dir %{_datadir}/%{name}
-%dir %{_datadir}/%{name}/client
-%dir %{_datadir}/%{name}/server
-%dir %{_datadir}/%{name}/common
+%config(noreplace) %{_sysconfdir}/%{name}/filter.d/ignorecommands/
+%{py_sitedir}/%{name}*
 %ghost %dir %{_var}/run/%{name}
-%{_datadir}/%{name}/client/*.py*
-%{_datadir}/%{name}/server/*.py*
-%{_datadir}/%{name}/common/*.py*
-%{_datadir}/%{name}/*-info
 %{_mandir}/man1/*
 
 
