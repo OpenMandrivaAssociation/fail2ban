@@ -9,7 +9,7 @@ URL:		http://fail2ban.sourceforge.net/
 Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}-%{version}.tar.gz
 Patch0:		%{name}-0.9.3-jail-conf.patch
 Patch1:		fail2ban_0.9.3-log-actions-to-SYSLOG.patch
-BuildRequires:	pkgconfig(python2)
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	systemd
 BuildRequires:	help2man
 Requires:	python >= 2.5
@@ -65,25 +65,20 @@ rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/osx-*.conf
 rm -r %{buildroot}%{_docdir}/%{name}
 
 %files
-%doc ChangeLog README TODO
+%doc ChangeLog README.md TODO
 %{_unitdir}/%{name}.service
 %{_bindir}/%{name}-*
 %config(noreplace) %{_sysconfdir}/%{name}/jail.d/00-systemd.conf
 %config(noreplace) %{_sysconfdir}/%{name}/*.conf
 %config(noreplace) %{_sysconfdir}/%{name}/action.d/*.conf
+%config(noreplace) %{_sysconfdir}/%{name}/action.d/*.py
 %config(noreplace) %{_sysconfdir}/%{name}/filter.d/*.conf
-%dir %{_sysconfdir}/%{name}
-%dir %{_sysconfdir}/%{name}/action.d
-%dir %{_sysconfdir}/%{name}/filter.d
-%dir %{_datadir}/%{name}
-%dir %{_datadir}/%{name}/client
-%dir %{_datadir}/%{name}/server
-%dir %{_datadir}/%{name}/common
-%dir %{_var}/lib/%{name}
+%config(noreplace) %{_sysconfdir}/%{name}/filter.d/ignorecommands/
+#%dir %{_var}/lib/%{name}
 %ghost %dir %{_var}/run/%{name}
-%{_datadir}/%{name}/client/*.py*
-%{_datadir}/%{name}/server/*.py*
-%{_datadir}/%{name}/common/*.py*
-%{_datadir}/%{name}/*-info
+%{py3_sitedir}/%{name}
+%{py3_sitedir}/%{name}/client/*.py*
+%{py3_sitedir}/%{name}/server/*.py*
+%{py3_sitedir}/%{name}/common/*.py*
 %{_mandir}/man1/*
 
