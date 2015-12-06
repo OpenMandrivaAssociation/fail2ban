@@ -46,7 +46,7 @@ popd
 %{__python} setup.py install --root=%{buildroot}
 
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -m 644 files/fail2ban.service %{buildroot}%{_unitdir}/%{name}.service
 
 install -d %{buildroot}/%{_mandir}/man1
 install man/*.1 %{buildroot}%{_mandir}/man1/
@@ -93,7 +93,7 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 %{_sysconfdir}/%{name}/filter.d/ignorecommands/
 %{py_sitedir}/%{name}/client/*.py
 %{py_sitedir}/%{name}/server/*.py
-%{py_sitedir}/%{name}-%{version}-py2.7.egg-info/*
+%{py_sitedir}/%{name}-%{version}-py2.7.egg-info
 %{py_sitedir}/%{name}/*.py
 %ghost %dir %{_var}/run/%{name}
 %{_mandir}/man1/*
