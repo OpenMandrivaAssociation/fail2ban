@@ -7,7 +7,6 @@ License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://fail2ban.sourceforge.net/
 Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}-%{version}.tar.gz
-Source1:        %{name}.service
 Patch0:		%{name}-0.9.3-jail-conf.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	systemd
