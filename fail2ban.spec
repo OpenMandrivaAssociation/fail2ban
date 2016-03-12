@@ -1,13 +1,12 @@
-Summary:	Ban IPs that make too many password failures
-
+Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	0.9.3
-Release:	4
+Version:	0.9.4
+Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
-URL:		http://fail2ban.sourceforge.net/
+URL:		http://www.fail2ban.org
 Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}-%{version}.tar.gz
-Patch0:		%{name}-0.9.3-jail-conf.patch
+Patch0:		%{name}-0.9.4-jail-conf.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	systemd
 BuildRequires:	help2man
@@ -33,7 +32,7 @@ multiple log files including sshd or Apache web server logs.
 
 %build
 %serverbuild_hardened
-env CFLAGS="%{optflags}" python setup.py build
+env CFLAGS="%{optflags}" %{__python} setup.py build
 
 #pushd man
 #sh generate-man
@@ -47,6 +46,10 @@ install man/*.1 %{buildroot}%{_mandir}/man1/
 
 mkdir -p %{buildroot}%{_unitdir}
 install -m 644 files/fail2ban.service %{buildroot}%{_unitdir}/%{name}.service
+install -d %{buildroot}%{_presetdir}
+cat > %{buildroot}%{_presetdir}/86-fail2ban.preset << EOF
+enable fail2ban.service
+EOF
 
 install -d -m 0755 %{buildroot}%{_var}/run/fail2ban/
 install -d -m 0755 %{buildroot}%{_var}/lib/fail2ban/
@@ -73,6 +76,7 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 
 %files
 %doc ChangeLog README.md TODO
+%{_presetdir}/86-fail2ban.preset
 %{_unitdir}/%{name}.service
 %{_bindir}/%{name}-*
 %{_sysconfdir}/tmpfiles.d/fail2ban.conf
@@ -89,4 +93,3 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 %{py_sitedir}/%{name}/server/*.py*
 %{py_sitedir}/%{name}-%{version}-py3.4.egg-info
 %{_mandir}/man1/*
-

@@ -1,0 +1,26 @@
+diff -Naur fail2ban-0.9.4/config/jail.conf fail2ban-0.9.4.tpg/config/jail.conf
+--- fail2ban-0.9.4/config/jail.conf	2016-03-08 02:50:10.000000000 +0000
++++ fail2ban-0.9.4.tpg/config/jail.conf	2016-03-12 21:51:18.505396223 +0000
+@@ -109,7 +109,7 @@
+ #
+ # true:  jail will be enabled and log files will get monitored for changes
+ # false: jail is not enabled
+-enabled = false
++enabled = true
+ 
+ 
+ # "filter" defines the filter to use by the jail.
+@@ -221,11 +221,11 @@
+ #
+ 
+ [sshd]
+-
++enabled = true
+ port    = ssh
+ logpath = %(sshd_log)s
+ backend = %(sshd_backend)s
+-
++maxretry = 3
+ 
+ [sshd-ddos]
+ # This jail corresponds to the standard configuration in Fail2ban.
