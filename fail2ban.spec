@@ -1,11 +1,11 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	0.9.4
+Version:	0.9.6
 Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
-Source0:	https://github.com/downloads/fail2ban/fail2ban/%{name}-%{version}.tar.gz
+Source0:	https://github.com/fail2ban/fail2ban/archive/%{version}.tar.gz
 Patch0:		%{name}-0.9.4-jail-conf.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	systemd
