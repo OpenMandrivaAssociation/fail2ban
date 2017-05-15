@@ -1,6 +1,6 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	0.9.6
+Version:	0.9.7
 Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
@@ -28,7 +28,7 @@ multiple log files including sshd or Apache web server logs.
 
 %prep
 %setup -q
-%patch0 -p1
+%apply_patches
 
 %build
 %serverbuild_hardened
