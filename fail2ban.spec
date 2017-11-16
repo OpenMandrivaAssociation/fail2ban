@@ -1,12 +1,11 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	0.9.7
+Version:	0.10.1
 Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
 Source0:	https://github.com/fail2ban/fail2ban/archive/%{version}.tar.gz
-Patch0:		%{name}-0.9.4-jail-conf.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	systemd
 BuildRequires:	help2man
@@ -41,11 +40,15 @@ env CFLAGS="%{optflags}" %{__python} setup.py build
 %install
 %{__python} setup.py install --root=%{buildroot}
 
+# Replace /var/run with /run, but not in the top source directory
+find . -mindepth 2 -type f -exec \
+	sed -i -e 's|/var\(/run/fail2ban\)|\1|g' {} +
+
 install -d %{buildroot}/%{_mandir}/man1
 install man/*.1 %{buildroot}%{_mandir}/man1/
 
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 files/fail2ban.service %{buildroot}%{_unitdir}/%{name}.service
+install -m 644 build/fail2ban.service %{buildroot}%{_unitdir}/%{name}.service
 install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-fail2ban.preset << EOF
 enable fail2ban.service
