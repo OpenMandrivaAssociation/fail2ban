@@ -67,6 +67,8 @@ cat > %{buildroot}%{_sysconfdir}/%{name}/jail.d/00-systemd.conf <<EOF
 backend=systemd
 EOF
 
+echo "# Do all your modifications to the jail's configuration in jail.local!" > %{buildroot}%{_sysconfdir}/%{name}/jail.local
+
 # remove non-Linux actions
 rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/*ipfw.conf
 rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/{ipfilter,pf,ufw}.conf
@@ -83,11 +85,12 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 %{_unitdir}/%{name}.service
 %{_bindir}/%{name}-*
 %{_tmpfilesdir}/fail2ban.conf
-%config(noreplace) %{_sysconfdir}/%{name}/jail.d/00-systemd.conf
-%config(noreplace) %{_sysconfdir}/%{name}/*.conf
-%config(noreplace) %{_sysconfdir}/%{name}/action.d/*.conf
-%config(noreplace) %{_sysconfdir}/%{name}/action.d/*.py
-%config(noreplace) %{_sysconfdir}/%{name}/filter.d/*.conf
+%config(noreplace) %{_sysconfdir}/%{name}/jail.local
+%config %{_sysconfdir}/%{name}/jail.d/00-systemd.conf
+%config %{_sysconfdir}/%{name}/*.conf
+%config %{_sysconfdir}/%{name}/action.d/*.conf
+%config %{_sysconfdir}/%{name}/action.d/*.py
+%config %{_sysconfdir}/%{name}/filter.d/*.conf
 %{_sysconfdir}/%{name}/filter.d/ignorecommands/
 %dir %{_var}/run/%{name}
 %dir %{_var}/lib/%{name}
