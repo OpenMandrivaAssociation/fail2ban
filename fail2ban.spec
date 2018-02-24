@@ -57,7 +57,7 @@ EOF
 install -d -m 0755 %{buildroot}%{_var}/run/fail2ban/
 install -d -m 0755 %{buildroot}%{_var}/lib/fail2ban/
 
-mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
+mkdir -p %{buildroot}%{_tmpfilesdir}
 install -p -m 0644 files/fail2ban-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/fail2ban.conf
 
 mkdir -p %{buildroot}%{_sysconfdir}/%{name}/jail.d
