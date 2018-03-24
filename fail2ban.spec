@@ -16,7 +16,7 @@ Patch1:		fail2ban-ipset.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	help2man
-Requires:	python >= 2.3
+Requires:	python >= 3
 Requires:	tcp_wrappers >= 7.6-29
 Suggests:	python-gamin
 Suggests:	python-dnspython
