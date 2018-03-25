@@ -6,12 +6,6 @@ License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
 Source0:	https://github.com/fail2ban/fail2ban/archive/%{name}-%{version}.tar.gz
-# Fix buildroot issue
-# https://github.com/fail2ban/fail2ban/issues/1964
-Patch0:		https://github.com/fail2ban/fail2ban/commit/eac80966c503b0bc940c119d9a0adafb9ccf50d4.patch
-# Fix ipset issue
-# https://bugzilla.redhat.com/show_bug.cgi?id=1525134
-# https://github.com/fail2ban/fail2ban/issues/1990
 Patch1:		fail2ban-ipset.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(systemd)
