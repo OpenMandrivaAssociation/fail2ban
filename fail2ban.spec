@@ -11,8 +11,6 @@ BuildRequires:	pkgconfig(systemd)
 BuildRequires:	help2man
 Requires:	python >= 3
 Requires:	tcp_wrappers >= 7.6-29
-Suggests:	python-gamin
-Suggests:	python-dnspython
 Requires:	iptables >= 1.3.5-3
 Requires:	firewalld
 Requires:	python-systemd
@@ -29,16 +27,15 @@ multiple log files including sshd or Apache web server logs.
 %setup -q
 %apply_patches
 
+2to3 --write --nobackups .
+find -type f -exec sed -i -e '1s,^#!/usr/bin/python *,#!/usr/bin/python3,' {} +
+
 %build
 %serverbuild_hardened
-env CFLAGS="%{optflags}" %{__python} setup.py build
-
-#pushd man
-#sh generate-man
-#popd
+env CFLAGS="%{optflags}" %{__python3} setup.py build
 
 %install
-%{__python} setup.py install --root=%{buildroot}
+%{__python3} setup.py install --root=%{buildroot}
 
 # Replace /var/run with /run, but not in the top source directory
 find . -mindepth 2 -type f -exec \
@@ -67,6 +64,12 @@ cat > %{buildroot}%{_sysconfdir}/%{name}/jail.d/00-systemd.conf <<EOF
 backend=systemd
 EOF
 
+# firewalld configuration
+cat > %{buildroot}%{_sysconfdir}/%{name}/jail.d/00-firewalld.conf <<EOF
+[DEFAULT]
+banaction = firewallcmd-ipset
+EOF
+
 echo "# Do all your modifications to the jail's configuration in jail.local!" > %{buildroot}%{_sysconfdir}/%{name}/jail.local
 
 # remove non-Linux actions
@@ -87,6 +90,7 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 %{_tmpfilesdir}/fail2ban.conf
 %config(noreplace) %{_sysconfdir}/%{name}/jail.local
 %config %{_sysconfdir}/%{name}/jail.d/00-systemd.conf
+%config %{_sysconfdir}/%{name}/jail.d/00-firewalld.conf
 %config %{_sysconfdir}/%{name}/*.conf
 %config %{_sysconfdir}/%{name}/action.d/*.conf
 %config %{_sysconfdir}/%{name}/action.d/*.py
