@@ -6,7 +6,6 @@ License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
 Source0:	https://github.com/fail2ban/fail2ban/archive/%{name}-%{version}.tar.gz
-Patch1:		fail2ban-ipset.patch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	help2man
