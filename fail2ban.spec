@@ -106,5 +106,5 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 %{py_sitedir}/%{name}/*.py
 %{py_sitedir}/%{name}/client/*.py*
 %{py_sitedir}/%{name}/server/*.py*
-%{py_sitedir}/%{name}-%{version}-py%{py_ver}.egg-info
+%{py_sitedir}/*.egg-info
 %{_mandir}/man1/*
