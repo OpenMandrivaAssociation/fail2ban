@@ -1,7 +1,7 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	0.10.2
-Release:	2
+Version:	0.10.3.1
+Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
@@ -9,6 +9,7 @@ Source0:	https://github.com/fail2ban/fail2ban/archive/%{name}-%{version}.tar.gz
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(systemd)
 BuildRequires:	help2man
+BuildRequires:	pkgconfig(sqlite3)
 Requires:	python >= 3
 Requires:	tcp_wrappers >= 7.6-29
 Requires:	iptables >= 1.3.5-3
@@ -28,7 +29,11 @@ multiple log files including sshd or Apache web server logs.
 %apply_patches
 
 2to3 --write --nobackups .
-find -type f -exec sed -i -e '1s,^#!/usr/bin/python *,#!/usr/bin/python3,' {} +
+
+for fn in $(grep -lRE -m 1 '^\#\s*\!' bin/)
+do
+    sed -i -r '1 s/^(\#\!\/usr\/bin\/env )python$/\1python3/' $fn
+done
 
 %build
 %serverbuild_hardened
