@@ -1,0 +1,3 @@
+addFilter("E: empty-debuginfo-package")
+addFilter("E: no-binary")
+
