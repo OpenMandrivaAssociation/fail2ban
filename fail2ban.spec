@@ -1,7 +1,7 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
 Version:	0.10.3.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
@@ -14,7 +14,7 @@ Requires:	python >= 3
 Requires:	tcp_wrappers >= 7.6-29
 Requires:	iptables >= 1.3.5-3
 Requires:	firewalld
-Requires:	python-systemd
+Requires:	python-systemd >= 234
 Requires:	whois
 BuildArch:	noarch
 
