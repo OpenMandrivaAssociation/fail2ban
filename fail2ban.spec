@@ -1,3 +1,4 @@
+%define _python_bytecompile_build %nil
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
 Version:	0.10.3.1
