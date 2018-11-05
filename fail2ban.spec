@@ -1,12 +1,12 @@
 %define _python_bytecompile_build %nil
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	0.10.3.1
-Release:	3
+Version:	0.10.4
+Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
-Source0:	https://github.com/fail2ban/fail2ban/archive/%{name}-%{version}.tar.gz
+Source0:	https://github.com/fail2ban/fail2ban/archive/%{version}.tar.gz
 Source1:	fail2ban.rpmlintrc
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(systemd)
