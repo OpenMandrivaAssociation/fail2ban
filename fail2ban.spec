@@ -27,7 +27,7 @@ multiple log files including sshd or Apache web server logs.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 2to3 --write --nobackups .
 
