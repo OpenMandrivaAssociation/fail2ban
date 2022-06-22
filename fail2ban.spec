@@ -1,8 +1,11 @@
+%define debug_package %{nil}
+
 %define _python_bytecompile_build %nil
+
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
 Version:	0.10.4
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
@@ -37,7 +40,6 @@ do
 done
 
 %build
-%serverbuild_hardened
 env CFLAGS="%{optflags}" %{__python3} setup.py build
 
 %install
@@ -108,4 +110,4 @@ rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
 %{py_sitedir}/%{name}/client/*.py*
 %{py_sitedir}/%{name}/server/*.py*
 %{py_sitedir}/*.egg-info
-%{_mandir}/man1/*
+%doc %{_mandir}/man1/*
