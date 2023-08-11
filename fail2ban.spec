@@ -5,7 +5,7 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
 Version:	1.0.2
-Release:	2
+Release:	3
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		http://www.fail2ban.org
@@ -66,6 +66,8 @@ This package enables support for manipulating firewalld rules.
 %autosetup -p1
 
 %build
+./fail2ban-2to3
+
 %py_build
 
 %install
