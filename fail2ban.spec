@@ -8,7 +8,7 @@ Version:	1.0.2
 Release:	3
 License:	GPLv2+
 Group:		System/Configuration/Networking
-URL:		http://www.fail2ban.org
+URL:		https://www.fail2ban.org
 Source0:	https://github.com/fail2ban/fail2ban/archive/%{version}.tar.gz
 Source1:	fail2ban.rpmlintrc
 BuildRequires:	pkgconfig(python3)
