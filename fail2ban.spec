@@ -20,7 +20,7 @@ BuildRequires:	help2man
 
 Requires:	tcp_wrappers >= 7.6-29
 Requires:	nftables
-Requires:	python%{pyver}dist(systemd)
+Requires:	python%{pyver}dist(systemd-python)
 Requires:	whois
 
 %description
