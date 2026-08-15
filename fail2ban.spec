@@ -4,22 +4,23 @@
 
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
-Version:	1.1.0
+Version:	1.1.1
 Release:	1
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		https://www.fail2ban.org
 Source0:	https://github.com/fail2ban/fail2ban/archive/%{version}.tar.gz
 Source1:	fail2ban.rpmlintrc
+BuildArch:	noarch
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	pkgconfig(systemd)
+BuildRequires:	python%{pyver}dist(setuptools)
 BuildRequires:	help2man
 
-Requires:	python >= 3
 Requires:	tcp_wrappers >= 7.6-29
 Requires:	nftables
-Requires:	python-systemd >= 234
+Requires:	python%{pyver}dist(systemd)
 Requires:	whois
 
 %description
@@ -32,6 +33,7 @@ multiple log files including sshd or Apache web server logs.
 %doc ChangeLog README.md TODO
 %{_presetdir}/86-fail2ban.preset
 %{_unitdir}/%{name}.service
+%{_unitdir}/%{name}.socket
 %{_bindir}/%{name}-*
 %{_tmpfilesdir}/fail2ban.conf
 %config(noreplace) %{_sysconfdir}/%{name}/jail.local
@@ -41,13 +43,14 @@ multiple log files including sshd or Apache web server logs.
 %config %{_sysconfdir}/%{name}/action.d/*.py
 %config %{_sysconfdir}/%{name}/filter.d/*.conf
 %{_sysconfdir}/%{name}/filter.d/ignorecommands/
-%dir %{_var}/run/%{name}
+%dir %{_sysconfdir}/%{name}/fail2ban.d
+%dir %{_sysconfdir}/%{name}/jail.d
+%ghost %dir /run/fail2ban
 %dir %{_var}/lib/%{name}
-%{py_sitedir}/%{name}/*.py
-%{py_sitedir}/%{name}/client/*.py*
-%{py_sitedir}/%{name}/server/*.py*
+%{py_sitedir}/%{name}
 %{py_sitedir}/*.egg-info
 %doc %{_mandir}/man1/*
+%doc %{_mandir}/man5/*
 
 %package firewalld
 Summary:	Firewalld support for Fail2Ban
@@ -65,32 +68,47 @@ This package enables support for manipulating firewalld rules.
 %prep
 %autosetup -p1
 
-%build
-./fail2ban-2to3
+# Start from Fedora paths (same log locations today); keep our own file so they can diverge
+mv config/paths-fedora.conf config/paths-omv.conf
+sed -i -e '1s/^# Fedora$/# OpenMandriva/' config/paths-omv.conf
+sed -i -e 's/^before = paths-.*/before = paths-omv.conf/' config/jail.conf
 
+# Default ban actions live in paths-*.conf since 1.1.1; nftables matches Requires
+cat >> config/paths-omv.conf <<EOF
+
+# OpenMandriva default ban actions (overridable in jail.local)
+banaction = nftables
+banaction_allports = nftables[type=allports]
+EOF
+
+%build
 %py_build
 
 %install
 %py_install
 
-# Replace /var/run with /run, but not in the top source directory
-find . -mindepth 2 -type f -exec sed -i -e 's|/var\(/run/fail2ban\)|\1|g' {} +
+# Replace /var/run with /run in installed files
+find %{buildroot} -type f -exec sed -i -e 's|/var\(/run/fail2ban\)|\1|g' {} +
 
-install -d %{buildroot}/%{_mandir}/man1
-install man/*.1 %{buildroot}%{_mandir}/man1/
+install -d %{buildroot}%{_mandir}/man1
+install -d %{buildroot}%{_mandir}/man5
+install -m 644 man/*.1 %{buildroot}%{_mandir}/man1/
+install -m 644 man/*.5 %{buildroot}%{_mandir}/man5/
 
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 build/fail2ban.service %{buildroot}%{_unitdir}/%{name}.service
+sed -e 's,@BINDIR@,%{_bindir},' files/fail2ban.service.in > %{buildroot}%{_unitdir}/%{name}.service
+sed -e 's,@BINDIR@,%{_bindir},' files/fail2ban.socket.in > %{buildroot}%{_unitdir}/%{name}.socket
 install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-fail2ban.preset << EOF
 enable fail2ban.service
 EOF
 
-install -d -m 0755 %{buildroot}%{_var}/run/fail2ban/
 install -d -m 0755 %{buildroot}%{_var}/lib/fail2ban/
 
 mkdir -p %{buildroot}%{_tmpfilesdir}
-install -p -m 0644 files/fail2ban-tmpfiles.conf %{buildroot}%{_tmpfilesdir}/fail2ban.conf
+cat > %{buildroot}%{_tmpfilesdir}/fail2ban.conf <<EOF
+D /run/fail2ban 0755 root root -
+EOF
 
 # firewalld configuration
 cat > %{buildroot}%{_sysconfdir}/%{name}/jail.d/00-firewalld.conf <<EOF
@@ -119,16 +137,12 @@ rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/*ipfw.conf
 rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/{ipfilter,pf,ufw}.conf
 rm -rf %{buildroot}%{_sysconfdir}/%{name}/action.d/osx-*.conf
 
+# remove other distro path configs
+rm -f %{buildroot}%{_sysconfdir}/%{name}/paths-{arch,debian,fedora,freebsd,opensuse,osx}.conf
+
 # remove docs
 rm -r %{buildroot}%{_docdir}/%{name}
 # Remove test files
-rm -r %{buildroot}%{py_sitedir}/%{name}/tests/
-
-%post
-%systemd_post fail2ban.service
-
-%preun
-%systemd_preun fail2ban.service
-
-%postun
-%systemd_postun_with_restart fail2ban.service
+rm -rf %{buildroot}%{py_sitedir}/%{name}/tests/
+rm -f %{buildroot}%{_bindir}/fail2ban-testcases
+rm -f %{buildroot}%{_mandir}/man1/fail2ban-testcases.1*
