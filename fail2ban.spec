@@ -5,7 +5,7 @@
 Summary:	Ban IPs that make too many authentication failures
 Name:		fail2ban
 Version:	1.1.1
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		System/Configuration/Networking
 URL:		https://www.fail2ban.org
