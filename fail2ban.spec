@@ -55,7 +55,9 @@ multiple log files including sshd or Apache web server logs.
 %package firewalld
 Summary:	Firewalld support for Fail2Ban
 Requires:	%{name} = %{EVRD}
-Requires:	firewalld
+# firewalld 2.5.2-1 still needs python(abi) = 3.14, so a hard Requires
+# cannot be installed in the Python 3.15 extra-test chroot.
+Recommends:	firewalld
 
 %description firewalld
 This package enables support for manipulating firewalld rules.
